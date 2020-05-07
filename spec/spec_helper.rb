@@ -1,4 +1,8 @@
 require "bundler/setup"
+
+require "rails"
+require "rails/all"
+
 require "silent_ping"
 
 RSpec.configure do |config|
