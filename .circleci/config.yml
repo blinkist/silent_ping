@@ -41,6 +41,7 @@ jobs:
           gem-credentials-env-name: $RUBYGEMS_API_KEY
 
 workflows:
+  version: 2
   test-build-and-deploy:
     jobs:
       - test-with-ruby-latest
@@ -52,7 +53,5 @@ workflows:
           - test-with-ruby-2-6-5
           - test-with-ruby-2-3-6
           filters:
-            tags:
-              only: /^v.*/
             branches:
-              ignore: /.*/
+              only: master
