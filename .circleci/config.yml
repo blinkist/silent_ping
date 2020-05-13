@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  gem: zfhui/ruby-gem@0.1.0
+  gem: zfhui/ruby-gem@0.2.1
 
 jobs:
   test-with-ruby-latest:
@@ -30,10 +30,29 @@ jobs:
       - gem/setup-and-test:
           gemspec: silent_ping.gemspec
           bundler-version: 1.16.1
+  build-and-release:
+    working_directory: ~/repo
+    executor: gem/default
+    steps:
+      - gem/build:
+          gem-name: silent_ping
+      - gem/release:
+          gem-name: silent_ping
+          gem-credentials-env-name: $RUBYGEMS_API_KEY
 
 workflows:
-  test:
+  test-build-and-deploy:
     jobs:
       - test-with-ruby-latest
       - test-with-ruby-2-6-5
       - test-with-ruby-2-3-6
+      - build-and-release:
+          requires:
+          - test-with-ruby-latest
+          - test-with-ruby-2-6-5
+          - test-with-ruby-2-3-6
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
